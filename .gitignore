@@ -1,0 +1,14 @@
+# Configurazione locale e segreti. .env.example resta tracciato.
+.env
+.env.*
+!.env.example
+
+# Adatta gli output generati allo stack scelto.
+
+# Prototipo
+/data/*.db*
+.next/
+node_modules/
+next-env.d.ts
+.vercel
+*.tsbuildinfo

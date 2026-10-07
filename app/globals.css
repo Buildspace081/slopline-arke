@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Prototipo solo tema chiaro: le card sono bianche, quindi non seguiamo prefers-color-scheme. */
+:root {
+  color-scheme: light;
+}
+
+body {
+  font-family: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
