@@ -20,7 +20,7 @@ npm run seed     # ricrea il database fittizio (data/arke.db)
 npm run dev      # http://localhost:3000
 ```
 
-Configurazione: copia `.env.example` in `.env.local`. Senza chiave AI usa `AGENT_MODE=mock` (demo offline, dichiarata nella UI). Con `AI_GATEWAY_API_KEY` l'agente chiama davvero il modello. Non inserire segreti nei commit.
+Configurazione: copia `.env.example` in `.env.local`. Senza chiave AI usa `AGENT_MODE=mock` (demo offline, dichiarata nella UI). Con `GOOGLE_GENERATIVE_AI_API_KEY` (Google AI Studio, Gemini Flash, default `gemini-flash-latest`) o `AI_GATEWAY_API_KEY` l'agente chiama davvero il modello. Se `AGENT_MODE=mock` e' impostato, ha la precedenza: toglilo per usare il modello. Non inserire segreti nei commit.
 
 ## Verifica
 

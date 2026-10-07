@@ -1,9 +1,13 @@
 import { ToolLoopAgent, Output, stepCountIs } from "ai";
+import { google } from "@ai-sdk/google";
 import { agentTools } from "./tools";
 import { proposalSchema, type AgentResult, type AgentStep } from "./schema";
 import { mockRun } from "./mock";
 
-export const MODEL = process.env.AGENT_MODEL ?? "anthropic/claude-sonnet-4.5";
+// Provider in ordine di preferenza: Google AI Studio (chiave diretta) -> Vercel AI Gateway -> demo offline.
+const hasGoogleKey = () => Boolean(process.env.GOOGLE_GENERATIVE_AI_API_KEY);
+const hasGatewayKey = () => Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN);
+export const modelName = () => process.env.AGENT_MODEL || (hasGoogleKey() ? "gemini-flash-latest" : "anthropic/claude-sonnet-4.5");
 
 const INSTRUCTIONS = `Sei l'assistente dell'ufficio ordini di SLOPLINE, azienda di abbigliamento sportivo.
 Ricevi un messaggio (email o trascrizione di audio WhatsApp) e prepari una BOZZA strutturata. Non crei ordini: li conferma una persona.
@@ -18,26 +22,28 @@ Regole:
 - Le date relative ("meta' dicembre") vanno in requestedDate solo se si deducono con sicurezza, altrimenti null e scrivilo in doubts.
 - Rispondi in italiano. confidence=alta solo se tutto e' verificato e senza dubbi.`;
 
-const agent = new ToolLoopAgent({
-  model: MODEL,
-  instructions: INSTRUCTIONS,
-  tools: agentTools,
-  output: Output.object({ schema: proposalSchema }),
-  stopWhen: stepCountIs(8),
-});
+function buildAgent() {
+  return new ToolLoopAgent({
+    model: hasGoogleKey() ? google(modelName()) : modelName(),
+    instructions: INSTRUCTIONS,
+    tools: agentTools,
+    output: Output.object({ schema: proposalSchema }),
+    stopWhen: stepCountIs(8),
+  });
+}
 
 export function liveAvailable() {
-  return Boolean(process.env.AI_GATEWAY_API_KEY || process.env.VERCEL_OIDC_TOKEN);
+  return hasGoogleKey() || hasGatewayKey();
 }
 
 export async function runAgent(email: { fromName: string; fromAddress: string; subject: string; body: string; channel: string }): Promise<AgentResult> {
   const mode = process.env.AGENT_MODE ?? (liveAvailable() ? "live" : "none");
   if (mode === "mock") return mockRun(email);
   if (mode !== "live") {
-    throw new Error("Agente non configurato: imposta AI_GATEWAY_API_KEY in .env.local (oppure AGENT_MODE=mock per la demo offline).");
+    throw new Error("Agente non configurato: imposta GOOGLE_GENERATIVE_AI_API_KEY (oppure AI_GATEWAY_API_KEY) in .env.local, oppure AGENT_MODE=mock per la demo offline.");
   }
   const steps: AgentStep[] = [];
-  const result = await agent.generate({
+  const result = await buildAgent().generate({
     prompt: `Canale: ${email.channel}\nDa: ${email.fromName} <${email.fromAddress}>\nOggetto: ${email.subject}\n\n${email.body}`,
     onStepFinish: (s) => {
       for (const c of s.toolCalls ?? []) {
@@ -46,5 +52,5 @@ export async function runAgent(email: { fromName: string; fromAddress: string; s
       }
     },
   });
-  return { proposal: result.output, steps, mode: "live", model: MODEL };
+  return { proposal: result.output, steps, mode: "live", model: modelName() };
 }

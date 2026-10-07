@@ -27,7 +27,7 @@ bozza ──▶ UI: dubbi, quantita' modificabili ──▶ [umano] confirmPropo
 | Seed | Dati fittizi riproducibili | `scripts/seed.ts` | lib/db |
 | Contratto agente | Schema della bozza (`proposalSchema`) e tipi dei passi | `lib/agent/schema.ts` | Zod |
 | Tool dell'agente | Sola lettura su catalogo, clienti, magazzino, ordini | `lib/agent/tools.ts` | lib/db |
-| Agente | Istruzioni, modello, loop con limite di 8 passi, uscita strutturata | `lib/agent/agent.ts` | AI SDK, AI Gateway |
+| Agente | Istruzioni, modello, loop con limite di 8 passi, uscita strutturata; provider: Google AI Studio, altrimenti AI Gateway | `lib/agent/agent.ts` | AI SDK, @ai-sdk/google, AI Gateway |
 | Mock offline | Bozze precalcolate per le email del seed, dichiarate come demo | `lib/agent/mock.ts` | — |
 | Azioni posta | Analisi, conferma (unica scrittura), scarto, reset | `app/posta/actions.ts` | agente, DB |
 | UI | Lista ordini, scheda ordine, posta e pannello bozza | `app/`, `components/` | — |
