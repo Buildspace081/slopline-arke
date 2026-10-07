@@ -25,6 +25,7 @@ Ordine di priorita'. Ogni voce ha un criterio di completamento.
 1. Impostare `AI_GATEWAY_API_KEY` in `.env.local`, togliere `AGENT_MODE=mock`, confermare l'id modello. *Fatto quando*: le 6 email del seed producono una bozza valida in live.
 2. Correggere istruzioni, schema e tool dove la bozza diverge dalla attesa (vedi mock come riferimento). *Fatto quando*: prodotto, quantita', cliente e dubbi coincidono con l'atteso su tutte e 6.
 3. Gestire errori e limiti: timeout, risposta non valida, costi per esecuzione registrati in `agent_runs`. *Fatto quando*: un errore del modello mostra un messaggio e non lascia stati a meta'.
+3b. **Casella reale del backoffice: `sloplinearkedemo@gmail.com`** (indicata dall'utente). Oggi la pagina Posta la mostra solo come etichetta e legge email fittizie dal seed. Per leggere la casella vera: collegamento Gmail (API con OAuth o IMAP con password per app), configurato dal titolare dell'account, mai con credenziali nel repo; nuove variabili in `.env.example`; solo lettura, importazione in `emails` evitando duplicati. Decidere prima se le email reali restano separate dal seed fittizio.
 4. Allegati: oggi il testo menziona file ("tabella in allegato", "logo in altro messaggio") ma non esistono. Decidere se simulare allegati (tabella taglie, immagine logo) e farli leggere all'agente.
 
 ### B. Misurare la qualita'

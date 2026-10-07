@@ -18,7 +18,7 @@ export default async function Posta({ searchParams }: { searchParams: Promise<{ 
   return (
     <div className="grid gap-5 md:grid-cols-[320px_1fr]">
       <aside className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-        <div className="border-b border-slate-100 bg-slate-50 p-3 text-xs font-semibold uppercase text-slate-500">Posta in arrivo · ordini@slopline.example</div>
+        <div className="border-b border-slate-100 bg-slate-50 p-3 text-xs font-semibold uppercase text-slate-500">Posta in arrivo · sloplinearkedemo@gmail.com</div>
         <ul>
           {list.map((m) => (
             <li key={m.id}>
